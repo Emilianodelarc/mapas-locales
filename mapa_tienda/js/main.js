@@ -18,7 +18,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 var markers = [];
-
+let div_map = document.querySelector('#map')
+div_map.style.display = 'none'
 // Function to load and filter markers
 function loadMarkers(data) {
     data.forEach(function (local) {
@@ -29,7 +30,7 @@ function loadMarkers(data) {
                 className: "custom-icon",
                 html: `<div style="background-color: ${color}; width: 12px; height: 12px; border-radius: 50%;"></div>`
             })
-        }).bindPopup(`ID: ${local.Identificador}<br>Category: ${local.Categoria}`);
+        }).bindPopup(`ID: ${local.Identificador}<br>Category: ${local.Categoria}<br>Nombre:${local.Nombre}`);
 
         markers.push({ marker, turno: local.Turnos, category: local.Categoria, origin: local.CD_ORIGEN });
     });
@@ -78,7 +79,8 @@ function filterMarkers() {
 //     });
 
 
-
+// Muestra el contenedor de carga
+document.getElementById('loadingContainer').style.display = 'block';
 
 fetch('https://script.google.com/macros/s/AKfycbyQNrNj6u4ISk8jyO8xoLl48atIqrYr_f3X_LZIMLtpRBtwCbpeWhRMuQ6fkX29Uq8/exec')
     .then(response => {
@@ -97,6 +99,9 @@ fetch('https://script.google.com/macros/s/AKfycbyQNrNj6u4ISk8jyO8xoLl48atIqrYr_f
         });
         // console.log(data.datos);
         loadMarkers(data.datos)// Llama a la función para cargar los marcadores en el mapa
+        // Oculta el contenedor de carga
+        document.getElementById('loadingContainer').style.display = 'none';
+        div_map.style.display = 'block'
     })
     .catch(error => {
         console.error('Error loading data:', error);
