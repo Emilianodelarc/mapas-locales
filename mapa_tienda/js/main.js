@@ -92,7 +92,10 @@ fetch('https://script.google.com/macros/s/AKfycbyQNrNj6u4ISk8jyO8xoLl48atIqrYr_f
         data.datos.forEach(local => {
             local.Latitud = local.Latitud || 0;
             local.Longitud = local.Longitud || 0;
+            local["CD_ORIGEN"] = local["CD ORIGEN"];
+            delete local["CD ORIGEN"];
         });
+        // console.log(data.datos);
         loadMarkers(data.datos)// Llama a la función para cargar los marcadores en el mapa
     })
     .catch(error => {
