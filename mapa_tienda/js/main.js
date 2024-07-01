@@ -58,7 +58,29 @@ function filterMarkers() {
 }
 
 // Load data from JSON file
-fetch('js/data.json')
+// fetch('js/data.json')
+//     .then(response => {
+//         if (!response.ok) {
+//             throw new Error('Network response was not ok');
+//         }
+//         return response.json();
+//     })
+//     .then(data => {
+//         // console.log(data); // Verifica que los datos se carguen correctamente
+//         data.forEach(local => {
+//             local.Latitud = local.Latitud || 0;
+//             local.Longitud = local.Longitud || 0;
+//         });
+//         loadMarkers(data); // Llama a la función para cargar los marcadores en el mapa
+//     })
+//     .catch(error => {
+//         console.error('Error loading data:', error);
+//     });
+
+
+
+
+fetch('https://script.google.com/macros/s/AKfycbyQNrNj6u4ISk8jyO8xoLl48atIqrYr_f3X_LZIMLtpRBtwCbpeWhRMuQ6fkX29Uq8/exec')
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -67,12 +89,15 @@ fetch('js/data.json')
     })
     .then(data => {
         // console.log(data); // Verifica que los datos se carguen correctamente
-        data.forEach(local => {
+        data.datos.forEach(local => {
             local.Latitud = local.Latitud || 0;
             local.Longitud = local.Longitud || 0;
         });
-        loadMarkers(data); // Llama a la función para cargar los marcadores en el mapa
+        loadMarkers(data.datos)// Llama a la función para cargar los marcadores en el mapa
     })
     .catch(error => {
         console.error('Error loading data:', error);
     });
+
+
+
