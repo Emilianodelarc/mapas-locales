@@ -38,7 +38,7 @@ function loadMarkers(data) {
                 iconSize: [25, 25], // Ajusta el tamaño si es necesario
                 iconAnchor: [12.5, 12.5] // Ajusta el anclaje si es necesario
             })
-        }).bindPopup(`ID: ${local.Identificador}<br>Category: ${local.Categoria}<br>Nombre:${local.Nombre}`);
+        }).bindPopup(`ID: ${local.Identificador}<br>Category: ${local.Categoria}<br>Origen:${local.CD_ORIGEN}`);
 
         markers.push({ marker, turno: local.Turnos, category: local.Categoria, origin: local.CD_ORIGEN });
     });
