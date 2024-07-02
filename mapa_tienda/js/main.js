@@ -17,10 +17,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18
 }).addTo(map);
 
-let logoExpress = 'https://carrefourar.vtexassets.com/assets/vtex/assets-builder/carrefourar.theme/74.5.0/store-locator/icons/icon-express.svg'
-
-let logoHiper= 'https://carrefourar.vtexassets.com/assets/vtex/assets-builder/carrefourar.theme/74.5.0/store-locator/icons/icon-hipermercado.svg'
-
 
 var markers = [];
 let div_map = document.querySelector('#map')
@@ -29,14 +25,10 @@ div_map.style.display = 'none'
 function loadMarkers(data) {
     data.forEach(function (local) {
         var color = local.Turnos === 'primera_ventana' ? 'blue' : 'green';
-        var logo = local.Categoria.includes('Express') ? logoExpress : logoHiper
         var marker = L.marker([local?.Latitud, local?.Longitud], {
             icon: L.divIcon({
-                className: "leaflet-div-icon-custom",
-                html: `<div style="background-image: url(${logo}); border: 2px solid ${color}; width: 100%; height: 100%; border-radius: 50%;background-repeat: no-repeat;
-  background-position: center;"></div>`,
-                iconSize: [25, 25], // Ajusta el tamaño si es necesario
-                iconAnchor: [12.5, 12.5] // Ajusta el anclaje si es necesario
+                className: "custom-icon",
+                html: `<div style="background-color: ${color}; width: 12px; height: 12px; border-radius: 50%;"></div>`
             })
         }).bindPopup(`ID: ${local.Identificador}<br>Category: ${local.Categoria}<br>Origen:${local.CD_ORIGEN}`);
 
@@ -55,7 +47,7 @@ function filterMarkers() {
     markers.forEach(function (markerObj) {
         var marker = markerObj.marker;
         var showMarker = (selectedTurno === "" || markerObj.turno === selectedTurno) &&
-            (selectedCategoria === "" || markerObj.category.includes(selectedCategoria)) &&
+            (selectedCategoria === "" || markerObj.category == selectedCategoria) &&
             (selectedOrigen === "" || markerObj.origin === selectedOrigen);
 
         if (showMarker) {
@@ -98,7 +90,7 @@ fetch('https://script.google.com/macros/s/AKfycbyQNrNj6u4ISk8jyO8xoLl48atIqrYr_f
         return response.json();
     })
     .then(data => {
-        // console.log(data); // Verifica que los datos se carguen correctamente
+        console.log(data); // Verifica que los datos se carguen correctamente
         data.datos.forEach(local => {
             local.Latitud = local.Latitud || 0;
             local.Longitud = local.Longitud || 0;
