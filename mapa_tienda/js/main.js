@@ -21,7 +21,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 var markers = [];
 let div_map = document.querySelector('#map')
 div_map.style.display = 'none'
-// Function to load and filter markers
+
 function loadMarkers(data) {
     data.forEach(function (local) {
         var color = local.Turnos === 'primera_ventana' ? 'blue' : 'green';
@@ -32,13 +32,25 @@ function loadMarkers(data) {
             })
         }).bindPopup(`ID: ${local.Identificador}<br>Category: ${local.Categoria}<br>Origen:${local.CD_ORIGEN}`);
 
-        markers.push({ marker, turno: local.Turnos, category: local.Categoria, origin: local.CD_ORIGEN });
+        markers.push({ marker, turno: local.Turnos, category: local.Categoria, origin: local.CD_ORIGEN, id: local.Identificador });
     });
 
-    filterMarkers(); // Initial filter based on default selections
+    filterMarkers();
 }
+document.getElementById('searchButton').addEventListener('click', function () {
+    const searchValue = document.getElementById('searchInput').value;
+    markers.forEach(function (markerObj) {
+        var marker = markerObj.marker;
+        var showMarker = (searchValue === "" || markerObj.id == searchValue)
 
-// Function to filter markers based on selected filters
+        if (showMarker) {
+            map.addLayer(marker);
+        } else {
+            map.removeLayer(marker);
+        }
+    });
+});
+
 function filterMarkers() {
     var selectedTurno = document.getElementById("turnoFilter").value;
     var selectedCategoria = document.getElementById("categoriaFilter").value;
@@ -58,28 +70,6 @@ function filterMarkers() {
     });
 }
 
-// Load data from JSON file
-// fetch('js/data.json')
-//     .then(response => {
-//         if (!response.ok) {
-//             throw new Error('Network response was not ok');
-//         }
-//         return response.json();
-//     })
-//     .then(data => {
-//         // console.log(data); // Verifica que los datos se carguen correctamente
-//         data.forEach(local => {
-//             local.Latitud = local.Latitud || 0;
-//             local.Longitud = local.Longitud || 0;
-//         });
-//         loadMarkers(data); // Llama a la función para cargar los marcadores en el mapa
-//     })
-//     .catch(error => {
-//         console.error('Error loading data:', error);
-//     });
-
-
-// Muestra el contenedor de carga
 document.getElementById('loadingContainer').style.display = 'block';
 
 fetch('https://script.google.com/macros/s/AKfycbyQNrNj6u4ISk8jyO8xoLl48atIqrYr_f3X_LZIMLtpRBtwCbpeWhRMuQ6fkX29Uq8/exec')
@@ -90,16 +80,13 @@ fetch('https://script.google.com/macros/s/AKfycbyQNrNj6u4ISk8jyO8xoLl48atIqrYr_f
         return response.json();
     })
     .then(data => {
-        console.log(data); // Verifica que los datos se carguen correctamente
         data.datos.forEach(local => {
             local.Latitud = local.Latitud || 0;
             local.Longitud = local.Longitud || 0;
             local["CD_ORIGEN"] = local["CD ORIGEN"];
             delete local["CD ORIGEN"];
         });
-        // console.log(data.datos);
-        loadMarkers(data.datos)// Llama a la función para cargar los marcadores en el mapa
-        // Oculta el contenedor de carga
+        loadMarkers(data.datos)
         document.getElementById('loadingContainer').style.display = 'none';
         div_map.style.display = 'block'
     })
