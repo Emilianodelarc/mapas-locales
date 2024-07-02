@@ -17,6 +17,11 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18
 }).addTo(map);
 
+let logoExpress = 'https://carrefourar.vtexassets.com/assets/vtex/assets-builder/carrefourar.theme/74.5.0/store-locator/icons/icon-express.svg'
+
+let logoHiper= 'https://carrefourar.vtexassets.com/assets/vtex/assets-builder/carrefourar.theme/74.5.0/store-locator/icons/icon-hipermercado.svg'
+
+
 var markers = [];
 let div_map = document.querySelector('#map')
 div_map.style.display = 'none'
@@ -24,11 +29,14 @@ div_map.style.display = 'none'
 function loadMarkers(data) {
     data.forEach(function (local) {
         var color = local.Turnos === 'primera_ventana' ? 'blue' : 'green';
-        // console.log(color);
+        var logo = local.Categoria.includes('Express') ? logoExpress : logoHiper
         var marker = L.marker([local?.Latitud, local?.Longitud], {
             icon: L.divIcon({
-                className: "custom-icon",
-                html: `<div style="background-color: ${color}; width: 12px; height: 12px; border-radius: 50%;"></div>`
+                className: "leaflet-div-icon-custom",
+                html: `<div style="background-image: url(${logo}); border: 2px solid ${color}; width: 100%; height: 100%; border-radius: 50%;background-repeat: no-repeat;
+  background-position: center;"></div>`,
+                iconSize: [25, 25], // Ajusta el tamaño si es necesario
+                iconAnchor: [12.5, 12.5] // Ajusta el anclaje si es necesario
             })
         }).bindPopup(`ID: ${local.Identificador}<br>Category: ${local.Categoria}<br>Nombre:${local.Nombre}`);
 
