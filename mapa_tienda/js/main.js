@@ -38,17 +38,61 @@ function loadMarkers(data) {
     filterMarkers();
 }
 document.getElementById('searchButton').addEventListener('click', function () {
+    
     const searchValue = document.getElementById('searchInput').value;
+    if(searchValue != ""){
+        document.getElementById('reset').style.display ='block'
+        markers.forEach(function (markerObj) {
+            var marker = markerObj.marker;
+            var showMarker = markerObj.id == searchValue
+             
+            if (showMarker) {
+                map.addLayer(marker);
+            } else {
+                map.removeLayer(marker); 
+            }
+            
+        });
+
+       let noexiste = markers.some(mark => mark.id == searchValue)
+       if(!noexiste){
+        Toastify({
+            text: "No se encontró ningún local.",
+            className: "warning",
+            style: {
+              background: "#ffcc00",
+            }
+          }).showToast();
+       }
+    }else{
+        Toastify({
+            text: "El campo de búsqueda está vacío.",
+            className: "danger",
+            style: {
+              background: "red",
+            }
+          }).showToast();
+    }
+    
+});
+document.getElementById('reset').addEventListener('click', function () {
+    let searchValue = document.getElementById('searchInput').value;
+    document.getElementById('searchInput').value = ""
+    searchValue = ""
     markers.forEach(function (markerObj) {
         var marker = markerObj.marker;
         var showMarker = (searchValue === "" || markerObj.id == searchValue)
-
         if (showMarker) {
             map.addLayer(marker);
         } else {
             map.removeLayer(marker);
         }
     });
+    document.getElementById('reset').style.display ='none'
+    Toastify({
+        text: "Se restableció la búsqueda.",
+        className: "info"
+      }).showToast();
 });
 
 function filterMarkers() {

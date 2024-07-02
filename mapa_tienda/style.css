@@ -54,7 +54,7 @@ img {
   outline: none;
 }
 
-#searchButton {
+#searchButton, #reset {
   background-color: #fff;
   border: 1px solid #ccc;
   border-left: none;
@@ -63,7 +63,11 @@ img {
   border-radius: 0 4px 4px 0;
 }
 
-#searchButton img {
+#searchButton img, #reset img {
   width: 16px;
   height: 16px;
+}
+
+#reset{
+  display: none;
 }
