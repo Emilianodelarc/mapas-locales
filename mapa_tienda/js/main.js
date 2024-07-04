@@ -32,7 +32,7 @@ function loadMarkers(data) {
             })
         }).bindPopup(`ID: ${local.Identificador}<br>Category: ${local.Categoria}<br>Origen:${local.CD_ORIGEN}`);
 
-        markers.push({ marker, turno: local.Turnos, category: local.Categoria, origin: local.CD_ORIGEN, id: local.Identificador });
+        markers.push({ marker, turno: local.Turnos, category: local.Categoria, origin: local.CD_ORIGEN, id: local.Identificador, ruta:local.RUTA,envioRecep: local.DIAS_SUGERIDO });
     });
 
     filterMarkers();
@@ -99,20 +99,37 @@ function filterMarkers() {
     var selectedTurno = document.getElementById("turnoFilter").value;
     var selectedCategoria = document.getElementById("categoriaFilter").value;
     var selectedOrigen = document.getElementById("origenFilter").value;
-
+    var selectedRuta = document.getElementById("ruta").value;
+    var selectedEnvioRecep = document.getElementById("envioDia").value;
+    var count = 0;
     markers.forEach(function (markerObj) {
         var marker = markerObj.marker;
         var showMarker = (selectedTurno === "" || markerObj.turno === selectedTurno) &&
-            (selectedCategoria === "" || markerObj.category == selectedCategoria) &&
-            (selectedOrigen === "" || markerObj.origin === selectedOrigen);
+            (selectedCategoria === "" || markerObj.category === selectedCategoria) &&
+            (selectedOrigen === "" || markerObj.origin === selectedOrigen) &&
+            (selectedRuta === "" || markerObj.ruta === selectedRuta) &&
+            (selectedEnvioRecep === "" || markerObj.envioRecep === selectedEnvioRecep);
 
         if (showMarker) {
             map.addLayer(marker);
+            count++
         } else {
             map.removeLayer(marker);
         }
     });
+    document.getElementById("markerCount").innerText = count;
 }
+function resetFilters() {
+    
+    document.querySelectorAll('.filters select').forEach(select => {
+        select.value = "";
+    });
+
+    document.getElementById("searchInput").value = "";
+
+    filterMarkers();
+}
+
 
 document.getElementById('loadingContainer').style.display = 'block';
 
@@ -129,7 +146,10 @@ fetch('https://script.google.com/macros/s/AKfycbyQNrNj6u4ISk8jyO8xoLl48atIqrYr_f
             local.Longitud = local.Longitud || 0;
             local["CD_ORIGEN"] = local["CD ORIGEN"];
             delete local["CD ORIGEN"];
+            local["DIAS_SUGERIDO"] = local["DIAS SUGERIDO"];
+            delete local["DIAS SUGERIDO"];
         });
+        
         loadMarkers(data.datos)
         document.getElementById('loadingContainer').style.display = 'none';
         div_map.style.display = 'block'

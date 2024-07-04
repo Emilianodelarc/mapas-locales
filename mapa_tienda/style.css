@@ -63,11 +63,15 @@ img {
   border-radius: 0 4px 4px 0;
 }
 
-#searchButton img, #reset img {
+#searchButton img, #reset img,#resetButton img {
   width: 16px;
   height: 16px;
 }
 
 #reset{
   display: none;
+}
+
+button#resetButton {
+  background-color: #dc3545;
 }
