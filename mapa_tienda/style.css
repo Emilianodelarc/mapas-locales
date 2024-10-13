@@ -54,7 +54,8 @@ img {
   outline: none;
 }
 
-#searchButton, #reset {
+#searchButton,
+#reset {
   background-color: #fff;
   border: 1px solid #ccc;
   border-left: none;
@@ -63,15 +64,91 @@ img {
   border-radius: 0 4px 4px 0;
 }
 
-#searchButton img, #reset img,#resetButton img {
+#searchButton img,
+#reset img,
+#resetButton img {
   width: 16px;
   height: 16px;
 }
 
-#reset{
+#reset {
   display: none;
 }
 
 button#resetButton {
   background-color: #dc3545;
+}
+
+.btnRuta img {
+  width: 60px;
+}
+
+.btnRuta {
+  text-align: center;
+  width: 70px;
+  position: fixed;
+  right: 10px;
+  top: 5px;
+  cursor: pointer;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 1px solid black
+}
+
+.btnRuta:hover {
+  border: 3px solid #dc3545;
+}
+
+.btnRuta2:hover {
+  border: 3px solid #dc3545;
+  cursor: pointer;
+}
+
+.btnRuta2 img {
+  width: 80px;
+  border-radius: 50%;
+}
+
+.btnRuta2 {
+  text-align: center;
+  width: 100px;
+  position: fixed;
+  right: 10px;
+  top: 5px;
+  cursor: pointer;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 1px solid black
+}
+
+table {
+  width: 120px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+tbody {
+  display: flex;
+  position: fixed;
+  right: 0;
+  top: 95px;
+}
+
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.color-box {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  border-radius: 4px;
+  /* Añadir bordes redondeados */
 }

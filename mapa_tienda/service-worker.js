@@ -6,7 +6,9 @@ const urlsToCache = [
   '/manifest.json',
   '/assets/icons/icon-192x192.png',
   '/assets/icons/icon-512x512.png',
+  '/view/ruteos_transp.html',
   '/js/main.js',
+  '/js/ruta_punto_a_punto.js',
   '/js/data.json',
   '/style.css'
   // Agrega aquí más recursos que deseas cachear

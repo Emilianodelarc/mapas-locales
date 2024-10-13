@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa - LOCALES</title>
+  <link rel="shortcut icon" href="./assets/favicon.ico" type="image/x-icon">
+  <link rel="manifest" href="/manifest.json">
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+  <div>
+    <a href="../index.html" class="btnRuta2"><img src="../assets/transp.gif" alt=""></a>
+  </div>
+  <div class="filters">
+    <label for="turnoFilter">Filtrar por Rutas:</label>
+    <select id="ruta" onchange="filterMarkers()">
+      <option value="">Todas las Rutas</option>
+      <option value="Zona_08_BSAS_Capital_8">Zona 08 BSAS Capital 8</option>
+      <option value="Zona_44_BSAS_Capital_44">Zona 44 BSAS Capital 44</option>
+      <option value="Zona_08_BSAS_Capital_14">Zona 08 BSAS Capital 14</option>
+      <option value="Zona_05_BSAS_Capital_5">Zona 05 BSAS Capital 5</option>
+      <option value="Zona_02_BSAS_GBA_Oeste_1">Zona 02 BSAS GBA Oeste 1</option>
+      <option value="Zona_01_BSAS_GBA_Norte">Zona 01 BSAS GBA Norte</option>
+      <option value="Zona_07_BSAS_Norte">Zona 07 BSAS Norte</option>
+      <option value="Zona_01_BSAS_GBA_NorOeste">Zona 01 BSAS GBA NorOeste</option>
+      <option value="Zona_02_BSAS_GBA_Oeste">Zona 02 BSAS GBA Oeste</option>
+      <option value="Zona_45_BSAS_GBA_Oeste">Zona 45 BSAS GBA Oeste</option>
+      <option value="Zona_03_BSAS_GBA_Sureste">Zona 03 BSAS GBA Sureste</option>
+      <option value="Zona_04_BSAS_GBA_SurOeste">Zona 04 BSAS GBA SurOeste</option>
+      <option value="Zona_42_BSAS_GBA_Sur">Zona 42 BSAS GBA Sur</option>
+      <option value="Zona_25_BSAS_GBA_Sur">Zona 25 BSAS GBA Sur</option>
+      <option value="Zona_12_Interior_Rosario">Zona 12 Interior Rosario</option>
+      <option value="Zona_07_Interior_Pergamino_VenadoTuerto">Zona 07 Interior Pergamino Venado Tuerto</option>
+      <option value="Zona_45_BSAS_GBA_Oeste_1">Zona 45 BSAS GBA Oeste 1</option>
+      <option value="Zona_01_BSAS_GBA_Norte_2">Zona 01 BSAS GBA Norte 2</option>
+      <option value="Zona_03_Interior_Concordia_Gualeguaychu">Zona 03 Interior Concordia Gualeguaychu</option>
+      <option value="Zona_13_Interior_SanNicolas">Zona 13 Interior San Nicolas</option>
+      <option value="Zona_19_Interior_Parana">Zona 19 Interior Parana</option>
+      <option value="Zona_05_Interior_Chaco_Corrientes_Formosa">Zona 05 Interior Chaco Corrientes Formosa</option>
+      <option value="Zona_08_Interior_Tucuman_Catamarca_LaRioja">Zona 08 Interior Tucuman Catamarca La Rioja</option>
+      <option value="Zona_09_Interior_Salta_Jujuy">Zona 09 Interior Salta Jujuy</option>
+      <option value="Zona_02_Interior_Cordoba">Zona 02 Interior Cordoba</option>
+      <option value="Zona_06_Interior_Mendoza_SanJuan">Zona 06 Interior Mendoza San Juan</option>
+      <option value="Zona_04_Interior_RioIV_SanLuis">Zona 04 Interior Rio IV San Luis</option>
+      <option value="Zona_10_Interior_LaPampa">Zona 10 Interior La Pampa</option>
+      <option value="Zona_01_Interior_MarDelPlata_Tandil_Balcarce">Zona 01 Interior Mar Del Plata Tandil Balcarce
+      </option>
+      <option value="Zona_11_Interior_BahiaBlanca_Olavarria">Zona 11 Interior Bahia Blanca Olavarria</option>
+      <option value="Zona_14_Interior_Neuquen_Bariloche">Zona 14 Interior Neuquen Bariloche</option>
+      <option value="Zona_17_Interior_CaletaOlivia_ComodoroRivadavia">Zona 17 Interior Caleta Olivia Comodoro Rivadavia
+      </option>
+      <option value="Zona_15_Interior_Trelew_PuertoMadryn">Zona 15 Interior Trelew Puerto Madryn</option>
+      <option value="Zona_16_Interior_RioGallegos">Zona 16 Interior Rio Gallegos</option>
+      <option value="Zona_18_Interior_RioGrande_Ushuaia">Zona 18 Interior Rio Grande Ushuaia</option>
+      <option value="Zona_27_BSAS_GBA_Norte">Zona 27 BSAS GBA Norte</option>
+      <option value="Zona_48_BSAS_GBA_Norte">Zona 48 BSAS GBA Norte</option>
+      <option value="Zona_46_BSAS_GBA_Norte">Zona 46 BSAS GBA Norte</option>
+      <option value="Zona_08_BSAS_Capital_9">Zona 08 BSAS Capital 9</option>
+      <option value="Zona_08_BSAS_Capital_11">Zona 08 BSAS Capital 11</option>
+      <option value="Zona_06_BSAS_GBA_Sur">Zona 06 BSAS GBA Sur</option>
+      <option value="Zona_Express_13_BSAS_Capital_Caballito_Flores_Almagro_Boedo">Zona Express 13 BSAS Capital Caballito
+        Flores Almagro Boedo</option>
+      <option value="Zona_Express_10_BSAS_Capital_Reco_Balv_SanCrist">Zona Express 10 BSAS Capital Reco Balvanera San
+        Cristobal</option>
+      <option value="Zona_Express_12_BSAS_Capital_Oeste">Zona Express 12 BSAS Capital Oeste</option>
+      <option value="Zona_Express_08_BSAS_Capital_Montserrat_SanNicolas_Retiro">Zona Express 08 BSAS Capital Montserrat
+        San Nicolas Retiro</option>
+      <option value="Zona_Express_14_BSAS_Capital_Palermo_Belgrano_Chacar_VUrquiz">Zona Express 14 BSAS Capital Palermo
+        Belgrano Chacarita Villa Urquiza</option>
+      <option value="Zona_Express_02_BSAS_GBA_Norte">Zona Express 02 BSAS GBA Norte</option>
+      <option value="Zona_Express_11_BSAS_Capital_Norte">Zona Express 11 BSAS Capital Norte</option>
+      <option value="Zona_Express_09_BSAS_Capital_Sur">Zona Express 09 BSAS Capital Sur</option>
+      <option value="Zona_Express_07_BSAS_GBA_SurAu25Mayo">Zona Express 07 BSAS GBA Sur Au 25 de Mayo</option>
+      <option value="Zona_Express_05_BSAS_GBA_Sureste">Zona Express 05 BSAS GBA Sureste</option>
+      <option value="Zona_Express_04_BSAS_GBA_Oeste_2do_Cordon">Zona Express 04 BSAS GBA Oeste 2do Cordon</option>
+      <option value="Zona_Express_03_BSAS_GBA_Oeste_1er_Cordon">Zona Express 03 BSAS GBA Oeste 1er Cordon</option>
+      <option value="Zona_Express_01_BSAS_GBA_NorOeste">Zona Express 01 BSAS GBA NorOeste</option>
+      <option value="Zona_Express_06_BSAS_GBA_SurOeste">Zona Express 06 BSAS GBA SurOeste</option>
+      <option value="Zona_Express_15_Cordoba">Zona Express 15 Cordoba</option>
+      <option value="Zona_15_Cordoba">Zona 15 Cordoba</option>
+      <option value="Zona_08_BSAS_Capital_10">Zona 08 BSAS Capital 10</option>
+    </select>
+
+    <label for="turnoFilter">Filtrar por Turno:</label>
+    <select id="turnoFilter" onchange="filterMarkers()">
+      <option value="">Todos</option>
+      <option value="primera_ventana">Primera Ventana</option>
+      <option value="segunda_ventana">Segunda Ventana</option>
+    </select>
+
+    <label for="categoriaFilter">Filtrar por Categoría:</label>
+    <select id="categoriaFilter" onchange="filterMarkers()">
+      <option value="">Todas las Categorías</option>
+      <option value="AMBA">AMBA</option>
+      <option value="Interior">Interior</option>
+      <option value="Express - AMBA">Express - AMBA</option>
+      <option value="Express - Interior">Express - Interior</option>
+      <option value="Franquicias">Franquicias</option>
+      <option value="GENERICO">Genérico</option>
+      <option value="CD">CD</option>
+      <option value="Franquicias">Franquicias</option>
+      <option value="Paradas Seguras">Paradas Seguras</option>
+      <option value="Zonas Peligrosas">Zonas Peligrosas</option>
+      <option value="DESCONOCIDA">Desconocida</option>
+    </select>
+    <br>
+    <label for="origenFilter">Filtrar por Origen:</label>
+    <select id="origenFilter" onchange="filterMarkers()">
+      <option value="">Todos los Orígenes</option>
+      <option value="Munro">Munro</option>
+      <option value="E.Echeverria">E. Echeverría</option>
+      <option value="Tortuguitas">Tortuguitas</option>
+      <option value="Malvinas">Malvinas</option>
+      <!-- <option value="NIC">NIC</option>
+          <option value="Cordoba">Córdoba</option>
+          <option value="Mendoza">Mendoza</option> -->
+    </select>
+    
+    <label for="turnoFilter">Filtrar por Envio/Recep.:</label>
+    <select id="envioDia" onchange="filterMarkers()">
+      <option value="">Todos los Dias</option>
+      <option value="MJS">MJS</option>
+      <option value="LX">LX</option>
+      <option value="LV">LV</option>
+      <option value="LXV">LXV</option>
+      <option value="MJ">MJ</option>
+      <option value="XV">XV</option>
+      <option value="MS">MS</option>
+      <option value="MV">MV</option>
+      <option value="XS">XS</option>
+      <option value="JS">JS</option>
+      <option value="n/a">n/a</option>
+      <option value="LJ">LJ</option>
+      <option value="LMXJVS">LMXJVS</option>
+      <option value="MJV">MJV</option>
+      <option value="LXJ">LXJ</option>
+      <option value="LMXJV">LMXJV</option>
+      <option value="LMXV">LMXV</option>
+      <option value="LMV">LMV</option>
+      <option value="LMJV">LMJV</option>
+      <option value="MXJV">MXJV</option>
+      <option value="LXJV">LXJV</option>
+      <option value="LXVS">LXVS</option>
+      <option value="MXJS">MXJS</option>
+      <option value="LMJ">LMJ</option>
+      <option value="LJV">LJV</option>
+      <option value="LMXJ">LMXJ</option>
+      <option value="LXJS">LXJS</option>
+      <option value="LMXJS">LMXJS</option>
+      <option value="XJV">XJV</option>
+    </select>
+    <button id="resetButton" onclick="resetFilters()">
+      <img src="../assets/reset.png" alt="Resetear">
+    </button>
+   
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Buscar local por ID">
+      <button id="searchButton">
+        <img src="../assets/lupa.webp" alt="Buscar">
+      </button>
+      <button id="reset">
+        <img src="../assets/reset.png" alt="Buscar">
+      </button>
+      <button id="removeLastPoint">Eliminar último punto</button>
+    </div>
+    <br>
+    <div >Total de marcadores que coinciden con los filtros: <span style="color:red" id="markerCount">0</span></div>
+    
+    <table>
+      <tbody>
+          <tr>
+              <td><div class="color-box" style="background-color: yellow;"></div></td>
+              <td>Paradas Seguras</td>
+          </tr>
+          <tr>
+              <td><div class="color-box" style="background-color: red;"></div></td>
+              <td>Zonas Peligrosas</td>
+          </tr>
+          <tr>
+              <td><div class="color-box" style="background-color: blue;"></div></td>
+              <td>Local</td>
+          </tr>
+      </tbody>
+  </table>
+  </div>
+
+  <div id="map" class="map-container"></div>
+
+  <!-- Contenedor del GIF de carga -->
+  <div class="loading-container" id="loadingContainer">
+    <img src="../assets/carre_gif.gif" alt="Cargando...">
+  </div>
+
+  <!-- Leaflet JS -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="../js/ruta_punto_a_punto.js"></script>
+</body>
+
+</html>
