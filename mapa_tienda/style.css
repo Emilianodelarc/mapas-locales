@@ -92,7 +92,8 @@ button#resetButton {
   cursor: pointer;
   background-color: #fff;
   border-radius: 50%;
-  border: 1px solid black
+  border: 1px solid black;
+  z-index: 9999;
 }
 
 .btnRuta:hover {
@@ -118,6 +119,7 @@ button#resetButton {
   cursor: pointer;
   background-color: #fff;
   border-radius: 50%;
+  z-index: 9999;
   border: 1px solid black
 }
 
