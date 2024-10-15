@@ -54,8 +54,8 @@ function loadMarkers(data) {
 }
 
 let inputFecha = document.getElementById('fechaEntrega')
-const hoy = new Date().toISOString().split('T')[0];
-inputFecha.value = hoy
+// const hoy = new Date().toISOString().split('T')[0];
+inputFecha.value = ''
 
 inputFecha.addEventListener('change', function () {
     var fechaEntregaInput = document.getElementById("fechaEntrega").value;
@@ -293,7 +293,7 @@ function actualizarSelectsPorFecha(fechaSeleccionada) {
 
     let defaultOption1 = document.createElement('option');
     defaultOption1.value = '';
-    defaultOption1.text = 'Viajes TMS';
+    defaultOption1.text = 'Transporte';
     selectTransporte.appendChild(defaultOption1);
 
     // Añadir las nuevas opciones al select de transporte
