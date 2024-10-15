@@ -25,7 +25,7 @@ var map = L.map('map', {
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18
 }).addTo(map);
-
+let BBDD;
 var markers = [];
 let div_map = document.querySelector('#map')
 div_map.style.display = 'none'
@@ -57,9 +57,12 @@ let inputFecha = document.getElementById('fechaEntrega')
 const hoy = new Date().toISOString().split('T')[0];
 inputFecha.value = hoy
 
-// inputFecha.addEventListener('change', function () {
-//     //console.log(inputFecha.value)
-// })
+inputFecha.addEventListener('change', function () {
+    var fechaEntregaInput = document.getElementById("fechaEntrega").value;
+    // console.log(fechaEntregaInput);
+    const valorFormateado = fechaEntregaInput.replace(/-/g, '');
+    actualizarSelectsPorFecha(valorFormateado)
+})
 
 // Inicializa un array para almacenar las coordenadas de la ruta seleccionada
 let selectedRoute = [];
@@ -256,7 +259,51 @@ document.getElementById('reset').addEventListener('click', function () {
         className: "info"
     }).showToast();
 });
+function actualizarSelectsPorFecha(fechaSeleccionada) {
+    // Filtrar los datos por la fecha seleccionada
+    // console.log(BBDD);
+    let datosFiltrados = BBDD.filter(item => item.FECHA_ENTREGA == fechaSeleccionada);
 
+    // Obtener los valores únicos de viajes_tms filtrados por la fecha
+    let viajesUnicos = [...new Set(datosFiltrados.map(item => item.VIAJE_TMS))];
+
+    // Obtener el select de viajes y limpiar las opciones anteriores
+    let selectViajes = document.getElementById('selectViajes');
+    selectViajes.innerHTML = '';
+    let defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.text = 'Viajes TMS';
+    selectViajes.appendChild(defaultOption);
+
+
+    // Añadir las nuevas opciones al select de viajes
+    viajesUnicos.forEach(viaje => {
+        let option = document.createElement('option');
+        option.value = viaje;
+        option.text = viaje;
+        selectViajes.appendChild(option);
+    });
+
+    // Obtener los valores únicos de transporte filtrados por la fecha
+    let transporteUnico = [...new Set(datosFiltrados.map(item => item.TRANSPORTE))];
+
+    // Obtener el select de transporte y limpiar las opciones anteriores
+    let selectTransporte = document.getElementById('selectTransporte');
+    selectTransporte.innerHTML = '';
+
+    let defaultOption1 = document.createElement('option');
+    defaultOption1.value = '';
+    defaultOption1.text = 'Viajes TMS';
+    selectTransporte.appendChild(defaultOption1);
+
+    // Añadir las nuevas opciones al select de transporte
+    transporteUnico.forEach(transp => {
+        let option = document.createElement('option');
+        option.value = transp;
+        option.text = transp;
+        selectTransporte.appendChild(option);
+    });
+}
 function filterMarkers() {
     var selectedTurno = document.getElementById("turnoFilter").value;
     var selectedCategoria = document.getElementById("categoriaFilter").value;
@@ -266,8 +313,9 @@ function filterMarkers() {
     var selectedViaje = document.getElementById("selectViajes").value;
     var selectedTransporte = document.getElementById("selectTransporte").value;
     var fechaEntregaInput = document.getElementById("fechaEntrega").value;
-    //console.log(fechaEntregaInput);
-    const valorFormateado = fechaEntregaInput.replace(/-/g, ''); 
+    // console.log(fechaEntregaInput);
+    const valorFormateado = fechaEntregaInput.replace(/-/g, '');
+    // actualizarSelectsPorFecha(valorFormateado)
     var count = 0;
     markers.forEach(function (markerObj) {
         var marker = markerObj.marker;
@@ -306,6 +354,10 @@ function resetFilters() {
     filterMarkers();
 }
 
+
+
+
+
 // Mostrar el loading y cargar los datos del fetch
 document.getElementById('loadingContainer').style.display = 'block';
 
@@ -330,39 +382,12 @@ fetch('https://script.google.com/macros/s/AKfycbzF9ARtSzpEzhQOLbFgWq5FQ--3Abtc1j
             local['FECHA_ENTREGA'] = local['FECHA ENTREGA'];
             delete local['FECHA ENTREGA'];
         });
-        //console.log(data);
+        // console.log(data);
+        BBDD = data.datos
         loadMarkers(data.datos);
+        // console.log(BBDD);
         document.getElementById('loadingContainer').style.display = 'none';
         div_map.style.display = 'block';
-
-        // Obtener los valores únicos de viajes_tms
-        let viajesUnicos = [...new Set(data.datos.map(item => item.VIAJE_TMS))];
-
-        // Crear el elemento select
-        let select = document.getElementById('selectViajes');
-
-        // Añadir los options al select
-        viajesUnicos.forEach(viaje => {
-            let option = document.createElement('option');
-            option.value = viaje;
-            option.text = viaje;
-            select.appendChild(option);
-        });
-        // Obtener los valores únicos de selectTransporte
-        let transporte = [...new Set(data.datos.map(item => item.TRANSPORTE))];
-
-        // Crear el elemento select
-        let selectTRans = document.getElementById('selectTransporte');
-
-        // Añadir los options al select
-        transporte.forEach(transp => {
-            let option = document.createElement('option');
-            option.value = transp;
-            option.text = transp;
-            selectTRans.appendChild(option);
-        });
-
-        
 
     })
     .catch(error => {
