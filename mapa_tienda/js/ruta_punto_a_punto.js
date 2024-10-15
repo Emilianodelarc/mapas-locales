@@ -77,12 +77,13 @@ inputFecha.value = hoy
 
 // Inicializa un array para almacenar las coordenadas de la ruta seleccionada
 let selectedRoute = [];
-
+let transporte_TMS;
 let selecViajesTMS = document.getElementById('selectViajes');
 selecViajesTMS.addEventListener('change', function () {
     filterMarkers()
     let seViaTMS = markers.filter(obj=> obj.viaje_tms == selecViajesTMS.value)
-    // //console.log(seViaTMS);
+    transporte_TMS = seViaTMS[0].transporte
+    
     // Obtén las coordenadas de los marcadores filtrados
     if (seViaTMS.length > 0) {
         // Extraer solo las coordenadas de los marcadores filtrados
@@ -125,7 +126,7 @@ function drawRoute(routeCoordinates) {
     })
         .then(response => response.json())
         .then(data => {
-            //console.log(data);
+            // console.log(data);
             const route = data.routes[0].geometry;
 
             // Decodificar la geometría
@@ -156,7 +157,7 @@ function drawRoute(routeCoordinates) {
             routeLine.on('mouseover', function () {
                 L.popup()
                     .setLatLng(routeLine.getBounds().getCenter()) // Centrar el popup sobre la línea
-                    .setContent(`Distancia: ${(distance / 1000).toFixed(2)} km<br>Duración: ${duration}`) // Convertir a km
+                    .setContent(`Distancia: ${(distance / 1000).toFixed(2)} km<br>Duración: ${duration}<br>Transporte: ${transporte_TMS}`) // Convertir a km
                     .openOn(map);
             });
         })
