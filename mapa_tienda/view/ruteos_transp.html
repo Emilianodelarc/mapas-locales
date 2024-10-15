@@ -18,7 +18,7 @@
     <a href="../index.html" class="btnRuta2"><img src="../assets/transp.gif" alt=""></a>
   </div>
   <div class="filters">
-    <label for="turnoFilter">Filtrar por Rutas:</label>
+    <label for="turnoFilter">F.R:</label>
     <select id="ruta" onchange="filterMarkers()">
       <option value="">Todas las Rutas</option>
       <option value="Zona_08_BSAS_Capital_8">Zona 08 BSAS Capital 8</option>
@@ -87,14 +87,14 @@
       <option value="Zona_08_BSAS_Capital_10">Zona 08 BSAS Capital 10</option>
     </select>
 
-    <label for="turnoFilter">Filtrar por Turno:</label>
+    <label for="turnoFilter">F.T:</label>
     <select id="turnoFilter" onchange="filterMarkers()">
       <option value="">Todos</option>
       <option value="primera_ventana">Primera Ventana</option>
       <option value="segunda_ventana">Segunda Ventana</option>
     </select>
 
-    <label for="categoriaFilter">Filtrar por Categoría:</label>
+    <label for="categoriaFilter">F.C:</label>
     <select id="categoriaFilter" onchange="filterMarkers()">
       <option value="">Todas las Categorías</option>
       <option value="AMBA">AMBA</option>
@@ -110,7 +110,7 @@
       <option value="DESCONOCIDA">Desconocida</option>
     </select>
     <br>
-    <label for="origenFilter">Filtrar por Origen:</label>
+    <label for="origenFilter">F.O:</label>
     <select id="origenFilter" onchange="filterMarkers()">
       <option value="">Todos los Orígenes</option>
       <option value="Munro">Munro</option>
@@ -122,7 +122,7 @@
           <option value="Mendoza">Mendoza</option> -->
     </select>
     
-    <label for="turnoFilter">Filtrar por Envio/Recep.:</label>
+    <label for="turnoFilter">F.E:</label>
     <select id="envioDia" onchange="filterMarkers()">
       <option value="">Todos los Dias</option>
       <option value="MJS">MJS</option>
@@ -155,6 +155,15 @@
       <option value="LMXJS">LMXJS</option>
       <option value="XJV">XJV</option>
     </select>
+    <select id="selectViajes">
+      <option value="">Viajes TMS</option>
+    </select>
+    <select id="selectTransporte" onchange="filterMarkers()">
+      <option value="">Transporte</option>
+    </select>
+
+    <input type="date" name="" id="fechaEntrega" onchange="filterMarkers()">
+
     <button id="resetButton" onclick="resetFilters()">
       <img src="../assets/reset.png" alt="Resetear">
     </button>

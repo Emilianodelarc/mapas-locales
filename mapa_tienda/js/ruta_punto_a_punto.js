@@ -3,7 +3,7 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('../service-worker.js')
             .then(registration => {
-                console.log('Service Worker registrado con éxito:', registration);
+                //console.log('Service Worker registrado con éxito:', registration);
             })
             .catch(error => {
                 console.error('Error al registrar el Service Worker:', error);
@@ -11,7 +11,16 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-var map = L.map('map').setView([-34.6037, -58.3816], 5);
+// var map = L.map('map').setView([-34.6037, -58.3816], 5);
+var map = L.map('map', {
+    center: [-34.6037, -58.3816], // Coordenadas de CABA
+    zoom: 10, // Nivel de zoom adecuado para ver GBA y CABA
+    // maxBounds: [
+    //     [-35.05, -58.85], // Suroeste de GBA
+    //     [-34.35, -57.85]  // Noreste de GBA
+    // ], // Limites visibles (bounding box)
+    // maxBoundsViscosity: 1.0 // Impide que el mapa salga de los límites
+});
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18
@@ -52,27 +61,42 @@ function loadMarkers(data) {
             }
         });
 
-        markers.push({ marker, turno: local.Turnos, category: local.Categoria, origin: local.CD_ORIGEN, id: local.Identificador, ruta: local.RUTA, envioRecep: local.DIAS_SUGERIDO });
+        markers.push({ marker, turno: local.Turnos, category: local.Categoria, origin: local.CD_ORIGEN, id: local.Identificador, ruta: local.RUTA, envioRecep: local.DIAS_SUGERIDO,viaje_tms: local.VIAJE_TMS, transporte:local.TRANSPORTE, fechaEntrega:local.FECHA_ENTREGA });
     });
 
     filterMarkers();
 }
 
+let inputFecha = document.getElementById('fechaEntrega')
+const hoy = new Date().toISOString().split('T')[0];
+inputFecha.value = hoy
 
+// inputFecha.addEventListener('change', function () {
+//     //console.log(inputFecha.value)
+// })
 
 // Inicializa un array para almacenar las coordenadas de la ruta seleccionada
 let selectedRoute = [];
 
-// Función para obtener el color de la línea basado en el número de puntos
-function getColorForRoute(pointCount) {
-    if (pointCount <= 2) {
-        return 'blue';  // Color para 1 o 2 puntos
-    } else if (pointCount <= 4) {
-        return 'violet'; // Color para 3 o 4 puntos
+let selecViajesTMS = document.getElementById('selectViajes');
+selecViajesTMS.addEventListener('change', function () {
+    filterMarkers()
+    let seViaTMS = markers.filter(obj=> obj.viaje_tms == selecViajesTMS.value)
+    // //console.log(seViaTMS);
+    // Obtén las coordenadas de los marcadores filtrados
+    if (seViaTMS.length > 0) {
+        // Extraer solo las coordenadas de los marcadores filtrados
+        const routeCoordinates = seViaTMS.map(mk => {
+            const latLng = mk.marker.getLatLng();
+            return [latLng.lng, latLng.lat];  // Invertir el orden: [lng, lat]
+        });
+        // //console.log(routeCoordinates);
+        // Llamar a la función para dibujar la ruta con las coordenadas obtenidas
+        drawRoute(routeCoordinates);
     } else {
-        return 'pink';   // Color para más de 4 puntos
+        console.error('No se encontraron coordenadas para la ruta seleccionada.');
     }
-}
+})
 
 var routeLine;
 
@@ -101,7 +125,7 @@ function drawRoute(routeCoordinates) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            //console.log(data);
             const route = data.routes[0].geometry;
 
             // Decodificar la geometría
@@ -124,12 +148,9 @@ function drawRoute(routeCoordinates) {
                     map.removeLayer(layer);
                 }
             });
-            // Obtener el color para la nueva ruta
-            const color = getColorForRoute(routeCoordinates.length);
-
 
             // Dibujar la línea de la nueva ruta
-            routeLine = L.polyline(latLngs, { color: color, weight: 4 }).addTo(map);
+            routeLine = L.polyline(latLngs, { color: '#050502', weight: 4 }).addTo(map);
 
             // Mostrar distancia al pasar el mouse
             routeLine.on('mouseover', function () {
@@ -175,12 +196,10 @@ function decodePolyline(polyline) {
 }
 
 document.getElementById('removeLastPoint').addEventListener('click', function () {
-    if (selectedRoute.length > 0) {
-        // Eliminar el último punto
-        selectedRoute = []
-
-        // Redibujar la ruta
-        map.removeLayer(routeLine)
+    if (routeLine) {  // Verifica si existe una ruta dibujada
+        // Eliminar la línea de la ruta del mapa
+        map.removeLayer(routeLine);
+        routeLine = null;  // Reinicia la variable para indicar que no hay ruta
     } else {
         Toastify({
             text: "No hay rutas para eliminar.",
@@ -257,6 +276,11 @@ function filterMarkers() {
     var selectedOrigen = document.getElementById("origenFilter").value;
     var selectedRuta = document.getElementById("ruta").value;
     var selectedEnvioRecep = document.getElementById("envioDia").value;
+    var selectedViaje = document.getElementById("selectViajes").value;
+    var selectedTransporte = document.getElementById("selectTransporte").value;
+    var fechaEntregaInput = document.getElementById("fechaEntrega").value;
+    //console.log(fechaEntregaInput);
+    const valorFormateado = fechaEntregaInput.replace(/-/g, ''); 
     var count = 0;
     markers.forEach(function (markerObj) {
         var marker = markerObj.marker;
@@ -264,7 +288,10 @@ function filterMarkers() {
             (selectedCategoria === "" || markerObj.category === selectedCategoria) &&
             (selectedOrigen === "" || markerObj.origin === selectedOrigen) &&
             (selectedRuta === "" || markerObj.ruta === selectedRuta) &&
-            (selectedEnvioRecep === "" || markerObj.envioRecep === selectedEnvioRecep);
+            (selectedEnvioRecep === "" || markerObj.envioRecep === selectedEnvioRecep) &&
+            (selectedViaje === "" || markerObj.viaje_tms == selectedViaje) && 
+            (selectedTransporte === "" || markerObj.transporte == selectedTransporte) && 
+            (valorFormateado == "" || markerObj.fechaEntrega == valorFormateado);
 
         if (showMarker) {
             map.addLayer(marker);
@@ -283,13 +310,19 @@ function resetFilters() {
 
     document.getElementById("searchInput").value = "";
 
+    if (routeLine) {  // Verifica si existe una ruta dibujada
+        // Eliminar la línea de la ruta del mapa
+        map.removeLayer(routeLine);
+        routeLine = null;  // Reinicia la variable para indicar que no hay ruta
+    }
+
     filterMarkers();
 }
 
 // Mostrar el loading y cargar los datos del fetch
 document.getElementById('loadingContainer').style.display = 'block';
 
-fetch('https://script.google.com/macros/s/AKfycbyQNrNj6u4ISk8jyO8xoLl48atIqrYr_f3X_LZIMLtpRBtwCbpeWhRMuQ6fkX29Uq8/exec')
+fetch('https://script.google.com/macros/s/AKfycbzF9ARtSzpEzhQOLbFgWq5FQ--3Abtc1jHMD5ezqPgPD9AX-C8FuLfxqAiUGeR7Chq6/exec')
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -297,6 +330,7 @@ fetch('https://script.google.com/macros/s/AKfycbyQNrNj6u4ISk8jyO8xoLl48atIqrYr_f
         return response.json();
     })
     .then(data => {
+
         data.datos.forEach(local => {
             local.Latitud = local.Latitud || 0;
             local.Longitud = local.Longitud || 0;
@@ -304,11 +338,44 @@ fetch('https://script.google.com/macros/s/AKfycbyQNrNj6u4ISk8jyO8xoLl48atIqrYr_f
             delete local["CD ORIGEN"];
             local["DIAS_SUGERIDO"] = local["DIAS SUGERIDO"];
             delete local["DIAS SUGERIDO"];
+            local["VIAJE_TMS"] = local["VIAJE TMS"];
+            delete local["VIAJE TMS"];
+            local['FECHA_ENTREGA'] = local['FECHA ENTREGA'];
+            delete local['FECHA ENTREGA'];
         });
-
+        //console.log(data);
         loadMarkers(data.datos);
         document.getElementById('loadingContainer').style.display = 'none';
         div_map.style.display = 'block';
+
+        // Obtener los valores únicos de viajes_tms
+        let viajesUnicos = [...new Set(data.datos.map(item => item.VIAJE_TMS))];
+
+        // Crear el elemento select
+        let select = document.getElementById('selectViajes');
+
+        // Añadir los options al select
+        viajesUnicos.forEach(viaje => {
+            let option = document.createElement('option');
+            option.value = viaje;
+            option.text = viaje;
+            select.appendChild(option);
+        });
+        // Obtener los valores únicos de selectTransporte
+        let transporte = [...new Set(data.datos.map(item => item.TRANSPORTE))];
+
+        // Crear el elemento select
+        let selectTRans = document.getElementById('selectTransporte');
+
+        // Añadir los options al select
+        transporte.forEach(transp => {
+            let option = document.createElement('option');
+            option.value = transp;
+            option.text = transp;
+            selectTRans.appendChild(option);
+        });
+
+        
 
     })
     .catch(error => {
