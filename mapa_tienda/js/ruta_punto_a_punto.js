@@ -42,24 +42,10 @@ function loadMarkers(data) {
         var marker = L.marker([local?.Latitud, local?.Longitud], {
             icon: L.divIcon({
                 className: "custom-icon",
-                html: `<div style="background-color: ${color}; width: 12px; height: 12px; border-radius: 50%;"></div>`
+                html: `<span style="color: ${color};" class="material-icons">location_on</span><span style="background:aqua">${local.Identificador}</span>`,
+                iconSize: [30, 30],
             })
         }).bindPopup(`ID: ${local.Identificador}<br>Category: ${local.Categoria}<br>Origen:${local.CD_ORIGEN}`);
-
-        // Agregar evento de clic al marcador
-        marker.on('click', function () {
-            // Verificar si la categoría es "Zonas Peligrosas" o "Paradas Seguras"
-            if (local.Categoria === 'Zonas Peligrosas' || local.Categoria === 'Paradas Seguras') {
-                return; // No hacer nada si la categoría es una de estas
-            }
-            // Agregar la coordenada del marcador a la ruta seleccionada
-            selectedRoute.push([local.Longitud, local.Latitud]);
-
-            // Dibujar la ruta si hay al menos 2 puntos seleccionados
-            if (selectedRoute.length > 1) {
-                drawRoute(selectedRoute);
-            }
-        });
 
         markers.push({ marker, turno: local.Turnos, category: local.Categoria, origin: local.CD_ORIGEN, id: local.Identificador, ruta: local.RUTA, envioRecep: local.DIAS_SUGERIDO,viaje_tms: local.VIAJE_TMS, transporte:local.TRANSPORTE, fechaEntrega:local.FECHA_ENTREGA });
     });
