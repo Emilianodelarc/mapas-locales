@@ -354,7 +354,14 @@ function resetFilters() {
     filterMarkers();
 }
 
-
+function formatearCoordenada(numero) {
+    let numStr = numero.toString();
+    
+    // Si el número es negativo, mantenemos el signo y agregamos el punto después de los dos primeros dígitos
+    if (numStr[0] === '-') {
+        return numStr.slice(0, 3) + '.' + numStr.slice(3);
+    }
+}
 
 
 
@@ -371,8 +378,8 @@ fetch('https://script.google.com/macros/s/AKfycbzF9ARtSzpEzhQOLbFgWq5FQ--3Abtc1j
     .then(data => {
 
         data.datos.forEach(local => {
-            local.Latitud = local.Latitud || 0;
-            local.Longitud = local.Longitud || 0;
+            local.Latitud = formatearCoordenada(local.Latitud)  || 0;
+            local.Longitud = formatearCoordenada(local.Longitud) || 0;
             local["CD_ORIGEN"] = local["CD ORIGEN"];
             delete local["CD ORIGEN"];
             local["DIAS_SUGERIDO"] = local["DIAS SUGERIDO"];
@@ -382,7 +389,7 @@ fetch('https://script.google.com/macros/s/AKfycbzF9ARtSzpEzhQOLbFgWq5FQ--3Abtc1j
             local['FECHA_ENTREGA'] = local['FECHA ENTREGA'];
             delete local['FECHA ENTREGA'];
         });
-        // console.log(data);
+        console.log(data);
         BBDD = data.datos
         loadMarkers(data.datos);
         // console.log(BBDD);
